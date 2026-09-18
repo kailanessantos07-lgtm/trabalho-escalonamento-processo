@@ -104,7 +104,7 @@ def imprime_stats(espera):
 
     print("Tempo medio de espera: " + str(tempo_espera_total / n_processos))
 
-
+#desição do escalonamento
 def FCFS(execucao, espera, restante, chegada):
     tempo_execucao = list(execucao)
     tempo_espera = list(espera)
