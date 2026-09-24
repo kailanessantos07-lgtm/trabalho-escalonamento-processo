@@ -139,23 +139,98 @@ def SJF(preemptivo, execucao, espera, restante, chegada):
     tempo_restante = list(restante)
     tempo_chegada = list(chegada)
 
-    # implementar codigo do SJF preemptivo e nao preemptivo
-    # ...
-    #
+    finalizados = [False] * n_processos
 
-    imprime_stats(tempo_espera)
+    tempo = 0
+    quantidade_finalizados = 0
 
+    # SJF PREEMPTIVO
+    if preemptivo:
 
-def PRIORIDADE(preemptivo, execucao, espera, restante, chegada, prioridade):
-    tempo_execucao = list(execucao)
-    tempo_espera = list(espera)
-    tempo_restante = list(restante)
-    tempo_chegada = list(chegada)
-    prioridade_temp = list(prioridade)
+        while quantidade_finalizados < n_processos:
 
-    # implementar codigo do Prioridade preemptivo e nao preemptivo
-    # ...
-    #
+            processo = -1
+
+            # Procura o processo com menor tempo restante
+            for i in range(n_processos):
+
+                if tempo_chegada[i] <= tempo and tempo_restante[i] > 0:
+
+                    if processo == -1:
+                        processo = i
+
+                    elif tempo_restante[i] < tempo_restante[processo]:
+                        processo = i
+
+            # Nenhum processo chegou
+            if processo == -1:
+                print("tempo[" + str(tempo) + "]: CPU ociosa")
+                tempo = tempo + 1
+                continue
+
+            print("tempo[" + str(tempo) + "]: processo[" +
+                  str(processo) + "] restante=" +
+                  str(tempo_restante[processo]))
+
+            # Executa uma unidade de tempo
+            tempo_restante[processo] = tempo_restante[processo] - 1
+
+            # Aumenta a espera dos outros processos
+            for i in range(n_processos):
+
+                if (i != processo and
+                    tempo_chegada[i] <= tempo and
+                    tempo_restante[i] > 0):
+
+                    tempo_espera[i] = tempo_espera[i] + 1
+
+            # Verifica se terminou
+            if tempo_restante[processo] == 0:
+                finalizados[processo] = True
+                quantidade_finalizados = quantidade_finalizados + 1
+
+            tempo = tempo + 1
+
+    # SJF NAO PREEMPTIVO
+    else:
+
+        while quantidade_finalizados < n_processos:
+
+            processo = -1
+
+            # Procura o processo com menor tempo de execução
+            for i in range(n_processos):
+
+                if tempo_chegada[i] <= tempo and tempo_restante[i] > 0:
+
+                    if processo == -1:
+                        processo = i
+
+                    elif tempo_execucao[i] < tempo_execucao[processo]:
+                        processo = i
+
+            # Nenhum processo chegou
+            if processo == -1:
+                print("tempo[" + str(tempo) + "]: CPU ociosa")
+                tempo = tempo + 1
+                continue
+
+            # Calcula o tempo de espera
+            tempo_espera[processo] = tempo - tempo_chegada[processo]
+
+            # Executa até terminar
+            while tempo_restante[processo] > 0:
+
+                print("tempo[" + str(tempo) + "]: processo[" +
+                      str(processo) + "] restante=" +
+                      str(tempo_restante[processo]))
+
+                tempo_restante[processo] = tempo_restante[processo] - 1
+
+                tempo = tempo + 1
+
+            finalizados[processo] = True
+            quantidade_finalizados = quantidade_finalizados + 1
 
     imprime_stats(tempo_espera)
 
