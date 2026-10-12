@@ -233,18 +233,163 @@ def SJF(preemptivo, execucao, espera, restante, chegada):
             quantidade_finalizados = quantidade_finalizados + 1
 
     imprime_stats(tempo_espera)
+    
+def PRIORIDADE(preemptivo, execucao, espera, restante, chegada, prioridade):
+    tempo_execucao = list(execucao)
+    tempo_espera = list(espera)
+    tempo_restante = list(restante)
+    tempo_chegada = list(chegada)
+    prioridade_temp = list(prioridade)
 
+    tempo = 0
+    processos_terminados = 0
+
+    if preemptivo:
+
+        # PRIORIDADE PREEMPTIVA
+        while processos_terminados < n_processos:
+
+            processo = -1
+
+            # Procura o processo de maior prioridade entre os que chegaram
+            for i in range(n_processos):
+
+                if tempo_chegada[i] <= tempo and tempo_restante[i] > 0:
+
+                    if processo == -1:
+                        processo = i
+
+                    elif prioridade_temp[i] < prioridade_temp[processo]:
+                        processo = i
+
+            # Se nenhum processo chegou, a CPU fica ociosa
+            if processo == -1:
+                print("tempo[" + str(tempo) + "]: CPU ociosa")
+                tempo = tempo + 1
+                continue
+
+            print("tempo[" + str(tempo) + "]: processo[" +
+                  str(processo) + "] restante=" +
+                  str(tempo_restante[processo]))
+
+            # Executa uma unidade de tempo
+            tempo_restante[processo] = tempo_restante[processo] - 1
+
+            # Os outros processos disponíveis aguardam
+            for i in range(n_processos):
+                if (i != processo and
+                        tempo_chegada[i] <= tempo and
+                        tempo_restante[i] > 0):
+                    tempo_espera[i] = tempo_espera[i] + 1
+
+            # Verifica se o processo terminou
+            if tempo_restante[processo] == 0:
+                processos_terminados = processos_terminados + 1
+
+            tempo = tempo + 1
+
+    else:
+
+        # PRIORIDADE NÃO-PREEMPTIVA
+        while processos_terminados < n_processos:
+
+            processo = -1
+
+            # Procura o processo de maior prioridade entre os que chegaram
+            for i in range(n_processos):
+
+                if tempo_chegada[i] <= tempo and tempo_restante[i] > 0:
+
+                    if processo == -1:
+                        processo = i
+
+                    elif prioridade_temp[i] < prioridade_temp[processo]:
+                        processo = i
+
+            # Se nenhum processo chegou, a CPU fica ociosa
+            if processo == -1:
+                print("tempo[" + str(tempo) + "]: CPU ociosa")
+                tempo = tempo + 1
+                continue
+
+            # Calcula o tempo de espera antes de começar
+            tempo_espera[processo] = tempo - tempo_chegada[processo]
+
+            # Executa o processo até terminar
+            while tempo_restante[processo] > 0:
+
+                print("tempo[" + str(tempo) + "]: processo[" +
+                      str(processo) + "] restante=" +
+                      str(tempo_restante[processo]))
+
+                tempo_restante[processo] = tempo_restante[processo] - 1
+
+                tempo = tempo + 1
+
+            processos_terminados = processos_terminados + 1
+
+    imprime_stats(tempo_espera)
 
 def Round_Robin(execucao, espera, restante):
+
     tempo_execucao = list(execucao)
     tempo_espera = list(espera)
     tempo_restante = list(restante)
 
-    # implementar codigo do Round-Robin
-    # ...
-    #
+    tempo_chegada = [0] * n_processos
+
+    quantum = int(input("Digite o quantum: "))
+
+    while quantum <= 0:
+        print("O quantum deve ser maior que zero.")
+        quantum = int(input("Digite o quantum: "))
+
+    tempo = 0
+    processos_terminados = 0
+    fila = []
+
+    # Adiciona os processos à fila
+    for i in range(n_processos):
+        fila.append(i)
+
+    # Guarda o instante em que cada processo começou a esperar
+    ultima_vez_na_fila = [0] * n_processos
+
+    while processos_terminados < n_processos:
+
+        if len(fila) == 0:
+            break
+
+        processo = fila.pop(0)
+
+        # Calcula o tempo de espera na fila
+        tempo_espera[processo] = tempo_espera[processo] + (
+            tempo - ultima_vez_na_fila[processo]
+        )
+
+        unidades = 0
+
+        # Executa durante o quantum ou até terminar
+        while unidades < quantum and tempo_restante[processo] > 0:
+
+            print("tempo[" + str(tempo) + "]: processo[" +
+                  str(processo) + "] restante=" +
+                  str(tempo_restante[processo]))
+
+            tempo_restante[processo] = tempo_restante[processo] - 1
+
+            tempo = tempo + 1
+            unidades = unidades + 1
+
+        # Se terminou, contabiliza
+        if tempo_restante[processo] == 0:
+            processos_terminados = processos_terminados + 1
+
+        else:
+            # Se não terminou, volta para o final da fila
+            fila.append(processo)
+            ultima_vez_na_fila[processo] = tempo
 
     imprime_stats(tempo_espera)
-
 
 main()
