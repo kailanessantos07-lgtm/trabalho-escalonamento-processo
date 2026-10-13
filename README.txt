@@ -33,3 +33,27 @@ atual, o processo executado e o seu tempo restante.
 
 Ao finalizar, o sistema apresenta o tempo de espera de cada processo
 e a média do tempo de espera.
+
+PRIORIDADE PREEMPTIVA
+O algoritmo verifica os processos disponíveis a cada unidade de tempo e seleciona aquele com maior prioridade. Nesta implementação, o menor número representa a maior prioridade. Se surgir um processo com prioridade maior, o processo atual pode ser interrompido.
+
+PRIORIDADE NÃO-PREEMPTIVA
+O algoritmo seleciona, entre os processos que já chegaram e ainda não terminaram, aquele com maior prioridade. Nesta implementação, o menor número representa a maior prioridade. Depois de selecionado, o processo executa até terminar.
+
+ROUND-ROBIN
+O algoritmo organiza os processos em uma fila e utiliza um quantum informado pelo usuário. Cada processo pode executar por até esse número de unidades de tempo. Se terminar, sai da fila; caso contrário, volta para o final da fila para aguardar outra oportunidade de execução.
+PRIORIDADE PREEMPTIVA
+O algoritmo verifica os processos disponíveis a cada unidade de tempo e seleciona aquele com maior prioridade. Nesta implementação, o menor número representa a maior prioridade. Se surgir um processo com prioridade maior, o processo atual pode ser interrompido.
+
+RESULTADOS
+Durante a execução, o programa apresenta o histórico de execução, indicando o tempo, o processo escolhido e o tempo restante. Ao final, apresenta o tempo de espera de cada processo e o tempo médio de espera.
+
+OBSERVAÇÕES IMPORTANTES
+- Para Round-Robin, esta versão considera que todos os processos chegam no tempo zero, pois a função original não recebe a lista de tempos de chegada.
+- Confirme que o significado da prioridade corresponde à convenção usada pelo professor. Nesta implementação, valores menores indicam prioridade maior.
+- Antes da entrega, teste os algoritmos com entradas manuais e confira os tempos de espera e a média.
+- O FCFS original do código-base executa os processos pela ordem dos índices e não considera diretamente tempos de chegada diferentes.
+
+USO DE INTELIGÊNCIA ARTIFICIAL
+Foi utilizada a ferramenta ChatGPT para auxiliar na elaboração e documentação de trechos dos algoritmos de escalonamento de processos. A assistência foi utilizada para explicar a lógica e apoiar a escrita da documentação.
+
